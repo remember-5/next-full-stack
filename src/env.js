@@ -7,6 +7,13 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
+    ADMIN_EMAIL: z.string().email().optional(),
+    ADMIN_NAME: z.string().min(1).optional(),
+    ADMIN_PASSWORD: z.string().min(8).optional(),
+    BETTER_AUTH_URL:
+      process.env.NODE_ENV === "production"
+        ? z.string().url()
+        : z.string().url().optional(),
     BETTER_AUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string()
@@ -31,6 +38,10 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    ADMIN_NAME: process.env.ADMIN_NAME,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+    BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,

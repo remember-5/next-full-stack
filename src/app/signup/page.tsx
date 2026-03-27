@@ -1,9 +1,25 @@
-"use client"
+import { GalleryVerticalEndIcon } from "lucide-react";
 
-import { SignupForm } from "~/components/signup-form"
-import { GalleryVerticalEndIcon } from "lucide-react"
+import { SignupForm } from "~/components/signup-form";
+import { getSafeRedirectTarget } from "~/lib/auth/routing";
+import { redirectAuthenticatedUser } from "~/server/better-auth/guards";
 
-export default function SignupPage() {
+type SignupPageProps = {
+  searchParams?: Promise<{
+    next?: string | string[];
+  }>;
+};
+
+export default async function SignupPage({ searchParams }: SignupPageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const nextPath = getSafeRedirectTarget(
+    Array.isArray(resolvedSearchParams?.next)
+      ? resolvedSearchParams.next[0]
+      : resolvedSearchParams?.next,
+  );
+
+  await redirectAuthenticatedUser(nextPath);
+
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
@@ -13,8 +29,8 @@ export default function SignupPage() {
           </div>
           Acme Inc.
         </a>
-        <SignupForm />
+        <SignupForm nextPath={nextPath} />
       </div>
     </div>
-  )
+  );
 }

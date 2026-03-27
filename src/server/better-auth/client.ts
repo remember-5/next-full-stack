@@ -1,5 +1,16 @@
 import { createAuthClient } from "better-auth/react";
+import { adminClient } from "better-auth/client/plugins";
 
-export const authClient = createAuthClient();
+import type { UserRole } from "./config";
 
-export type Session = typeof authClient.$Infer.Session;
+export const authClient = createAuthClient({
+  plugins: [adminClient()],
+});
+
+type AuthClientSession = typeof authClient.$Infer.Session;
+
+export type Session = Omit<AuthClientSession, "user"> & {
+  user: Omit<AuthClientSession["user"], "role"> & {
+    role: UserRole;
+  };
+};
