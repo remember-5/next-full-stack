@@ -30,3 +30,5 @@ The current history starts with a Conventional Commit (`feat: init`); keep using
 By default, all spawn_agents use gpt-5.4 and high.
 Unless the user explicitly requests otherwise, do not use gpt-5.1-codex-mini or any other lower-quality models.
 If no special model is required, it is preferable not to explicitly pass model/reasoning_effort, allowing the sub-agent to inherit the default configuration of the main session, where all spawn_agents use gpt-5.4 and high.
+All subagents must execute from a git worktree under `.worktrees/<task-name>` inside this repository.
+Before spawning a subagent, create or reuse an appropriate worktree under `.worktrees/` and use that worktree as the subagent's working directory.
