@@ -2,6 +2,7 @@ import { AppBreadcrumbs } from "~/components/app-breadcrumbs";
 import { AppSidebar } from "~/components/app-sidebar";
 import { SignOutForm } from "~/components/sign-out-form";
 import { Separator } from "~/components/ui/separator";
+import { normalizeUserRole } from "~/lib/auth/roles";
 import {
   SidebarInset,
   SidebarProvider,
@@ -13,7 +14,7 @@ export default async function AuthenticatedLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await requireSession();
-  const userRole = session.user.role === "admin" ? "admin" : "user";
+  const userRole = normalizeUserRole(session.user.role);
 
   return (
     <SidebarProvider>

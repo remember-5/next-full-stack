@@ -23,7 +23,7 @@ Use TypeScript/TSX, 2-space indentation, semicolons, and double quotes to match 
 No dedicated test runner is configured yet. Until one is added, every change should pass `pnpm check` and include manual verification for affected flows, especially auth, tRPC procedures, and Prisma changes. When adding tests, prefer `*.test.ts` or `*.test.tsx` near the module under test or inside `src/**/__tests__`.
 
 ## Commit & Pull Request Guidelines
-The current history starts with a Conventional Commit (`feat: init`); keep using that format, for example `fix: handle missing auth callback`. Keep commits focused and imperative. PRs should include a short summary, linked issue when applicable, screenshots for UI changes, manual verification steps, and notes for schema or env updates. If you add a config key, update `.env.example` in the same PR and avoid committing secrets in `.env`.
+The current history starts with a Conventional Commit (`feat: init`); keep using that format, for example `fix: handle missing auth callback`. Keep commits focused and imperative. Preserve a linear git history by default: prefer fast-forward merges, or rebase then fast-forward when needed. Do not create merge commits with `--no-ff` unless the user explicitly asks for them. PRs should include a short summary, linked issue when applicable, screenshots for UI changes, manual verification steps, and notes for schema or env updates. If you add a config key, update `.env.example` in the same PR and avoid committing secrets in `.env`.
 
 
 ## Codex SubAgent Rules

@@ -3,16 +3,16 @@ import test from "node:test";
 
 import { NextRequest } from "next/server";
 
-import { middleware } from "./middleware";
+import { proxy } from "./proxy";
 
-void test("login requests with stale auth cookies are not redirected by middleware", () => {
+void test("login requests with stale auth cookies are not redirected by proxy", () => {
   const request = new NextRequest("https://example.com/login", {
     headers: {
       cookie: "better-auth.session_token=stale-session-token",
     },
   });
 
-  const response = middleware(request);
+  const response = proxy(request);
 
   assert.equal(response.headers.get("location"), null);
 });
@@ -20,7 +20,7 @@ void test("login requests with stale auth cookies are not redirected by middlewa
 void test("protected requests preserve the intended destination in the login redirect", () => {
   const request = new NextRequest("https://example.com/admin/menu?tab=editor");
 
-  const response = middleware(request);
+  const response = proxy(request);
 
   assert.equal(
     response.headers.get("location"),

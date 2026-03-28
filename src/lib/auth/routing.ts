@@ -1,3 +1,5 @@
+import { normalizeUserRole } from "./roles";
+
 export type RoutingSession =
   | {
       user?: {
@@ -22,13 +24,13 @@ export function getAuthPageRedirect(
 }
 
 export function getAdminRedirect(session: RoutingSession) {
-  const role = session?.user?.role;
-
-  if (!role) {
+  if (!session?.user?.role) {
     return "/login";
   }
 
-  return role === "admin" ? null : "/dashboard";
+  return normalizeUserRole(session.user.role) === "admin"
+    ? null
+    : "/dashboard";
 }
 
 export function getLoginRedirect(pathname: string, search = "") {

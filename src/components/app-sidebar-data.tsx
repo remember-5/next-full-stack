@@ -11,6 +11,7 @@ import {
   navigationSectionRegistry,
   navigationUiLabels,
 } from "~/config/navigation";
+import { siteConfig } from "~/config/site";
 import type {
   NavigationIcon,
   NavigationItem,
@@ -185,8 +186,8 @@ export function getSidebarTeams() {
   return [
     {
       logo: <GalleryVerticalEndIcon />,
-      name: "Remember5",
-      plan: "Workspace",
+      name: siteConfig.companyName,
+      plan: siteConfig.defaultTeamName,
     },
   ];
 }

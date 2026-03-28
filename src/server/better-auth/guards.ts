@@ -6,6 +6,7 @@ import {
   getAdminRedirect,
   getAuthPageRedirect,
 } from "~/lib/auth/routing";
+import { normalizeUserRole } from "~/lib/auth/roles";
 
 import { getSession } from "./server";
 
@@ -47,11 +48,23 @@ export async function redirectAuthenticatedUser(nextPath?: string | null) {
 export async function requireSession() {
   const session = await getSession();
   assertAuthenticatedSession(session);
-  return session;
+  return {
+    ...session,
+    user: {
+      ...session.user,
+      role: normalizeUserRole(session.user.role),
+    },
+  };
 }
 
 export async function requireAdminSession() {
   const session = await getSession();
   assertAdminSession(session);
-  return session;
+  return {
+    ...session,
+    user: {
+      ...session.user,
+      role: normalizeUserRole(session.user.role),
+    },
+  };
 }

@@ -1,9 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
-import { requireAdminSession } from "~/server/better-auth/guards";
 
 export default async function AdminMenuPage() {
-  await requireAdminSession();
-
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6">
       <section className="space-y-2">
