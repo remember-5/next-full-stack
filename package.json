@@ -21,6 +21,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "postinstall": "prisma generate",
+    "prepare": "husky",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "next build && next start",
@@ -36,6 +37,13 @@
     "test:watch": "pnpm test:unit:watch",
     "typecheck": "tsc --noEmit",
     "verify": "pnpm check && pnpm test && pnpm test:e2e && pnpm build"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.mdx": "prettier --write"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
@@ -62,6 +70,8 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
     "@eslint/eslintrc": "^3.3.1",
     "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.0.15",
@@ -76,7 +86,9 @@
     "dotenv": "^17.3.1",
     "eslint": "^9.23.0",
     "eslint-config-next": "^16.2.1",
+    "husky": "^9.1.7",
     "jsdom": "^29.0.1",
+    "lint-staged": "^16.4.0",
     "postcss": "^8.5.3",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",

@@ -23,6 +23,15 @@ pnpm dev
 
 `pnpm setup:local` creates `.env` from `.env.example` when needed and fills `BETTER_AUTH_SECRET` for local development.
 
+## Git Hooks
+
+After `pnpm install`, Husky installs local git hooks automatically through the `prepare` script.
+
+- `pre-commit` runs `pnpm lint-staged` for staged `js/jsx/ts/tsx/mdx` files
+- `commit-msg` runs `pnpm exec commitlint --edit "$1"` and enforces Conventional Commits like `feat: add auth callback`
+- `pre-push` runs `pnpm check`
+- use `git commit --no-verify` only for exceptional local bypass cases
+
 ## Default Accounts
 
 - Admin email comes from `ADMIN_EMAIL`
