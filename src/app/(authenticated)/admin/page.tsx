@@ -1,9 +1,9 @@
 import { AuthStatusCard } from "~/components/auth-status-card";
 import type { Session as AuthSession } from "~/server/better-auth/config";
-import { requireAdminSession } from "~/server/better-auth/guards";
+import { requireSession } from "~/server/better-auth/guards";
 
 export default async function AdminPage() {
-  const session = await requireAdminSession();
+  const session = await requireSession();
   const authStatusSession: Pick<AuthSession, "user"> = {
     user: session.user as AuthSession["user"],
   };

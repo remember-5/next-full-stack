@@ -7,8 +7,10 @@ import { type inferRouterInputs, type inferRouterOutputs } from "@trpc/server";
 import { useState } from "react";
 import SuperJSON from "superjson";
 
-import { type AppRouter } from "~/server/api/root";
 import { createQueryClient } from "./query-client";
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+type AppRouter = import("~/server/api/root").AppRouter;
 
 let clientQueryClientSingleton: QueryClient | undefined = undefined;
 const getQueryClient = () => {
@@ -27,14 +29,14 @@ export const api = createTRPCReact<AppRouter>();
 /**
  * Inference helper for inputs.
  *
- * @example type HelloInput = RouterInputs['example']['hello']
+ * @example type HealthInput = RouterInputs['system']['health']
  */
 export type RouterInputs = inferRouterInputs<AppRouter>;
 
 /**
  * Inference helper for outputs.
  *
- * @example type HelloOutput = RouterOutputs['example']['hello']
+ * @example type HealthOutput = RouterOutputs['system']['health']
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
