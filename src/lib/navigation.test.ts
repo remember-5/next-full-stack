@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import { expect, test } from "vitest";
 
 import {
   getBreadcrumbsForPath,
@@ -14,54 +13,54 @@ function collectHrefs(items: NavigationItem[]): string[] {
   ]);
 }
 
-void test("normal users only see the dashboard route", () => {
+test("normal users only see the dashboard route", () => {
   const hrefs = collectHrefs(getVisibleNavigation("user"));
 
-  assert.deepEqual(hrefs, ["/dashboard"]);
+  expect(hrefs).toEqual(["/dashboard"]);
 });
 
-void test("admins see the dashboard, admin, and admin menu routes", () => {
+test("admins see the dashboard, admin, and admin menu routes", () => {
   const hrefs = collectHrefs(getVisibleNavigation("admin"));
 
-  assert.deepEqual(hrefs, ["/dashboard", "/admin", "/admin/menu"]);
+  expect(hrefs).toEqual(["/dashboard", "/admin", "/admin/menu"]);
 });
 
-void test("dashboard breadcrumbs resolve to a single dashboard crumb", () => {
-  assert.deepEqual(getBreadcrumbsForPath("/dashboard", "user"), [
+test("dashboard breadcrumbs resolve to a single dashboard crumb", () => {
+  expect(getBreadcrumbsForPath("/dashboard", "user")).toEqual([
     { href: "/dashboard", label: "Dashboard" },
   ]);
 });
 
-void test("admin breadcrumbs resolve to a single admin crumb for admins", () => {
-  assert.deepEqual(getBreadcrumbsForPath("/admin", "admin"), [
+test("admin breadcrumbs resolve to a single admin crumb for admins", () => {
+  expect(getBreadcrumbsForPath("/admin", "admin")).toEqual([
     { href: "/admin", label: "Admin" },
   ]);
 });
 
-void test("admin menu breadcrumbs resolve to admin then menu", () => {
-  assert.deepEqual(getBreadcrumbsForPath("/admin/menu", "admin"), [
+test("admin menu breadcrumbs resolve to admin then menu", () => {
+  expect(getBreadcrumbsForPath("/admin/menu", "admin")).toEqual([
     { href: "/admin", label: "Admin" },
     { href: "/admin/menu", label: "Menu" },
   ]);
 });
 
-void test("normal users cannot resolve admin breadcrumbs", () => {
-  assert.deepEqual(getBreadcrumbsForPath("/admin/menu", "user"), []);
+test("normal users cannot resolve admin breadcrumbs", () => {
+  expect(getBreadcrumbsForPath("/admin/menu", "user")).toEqual([]);
 });
 
-void test("unknown authenticated routes do not resolve breadcrumbs", () => {
-  assert.deepEqual(getBreadcrumbsForPath("/settings", "user"), []);
-  assert.deepEqual(getBreadcrumbsForPath("/settings", "admin"), []);
+test("unknown authenticated routes do not resolve breadcrumbs", () => {
+  expect(getBreadcrumbsForPath("/settings", "user")).toEqual([]);
+  expect(getBreadcrumbsForPath("/settings", "admin")).toEqual([]);
 });
 
-void test("breadcrumb lookup normalizes trailing slashes for visible routes", () => {
-  assert.deepEqual(getBreadcrumbsForPath("/dashboard/", "user"), [
+test("breadcrumb lookup normalizes trailing slashes for visible routes", () => {
+  expect(getBreadcrumbsForPath("/dashboard/", "user")).toEqual([
     { href: "/dashboard", label: "Dashboard" },
   ]);
 });
 
-void test("breadcrumb lookup uses the closest visible registered parent path", () => {
-  assert.deepEqual(getBreadcrumbsForPath("/admin/menu/details", "admin"), [
+test("breadcrumb lookup uses the closest visible registered parent path", () => {
+  expect(getBreadcrumbsForPath("/admin/menu/details", "admin")).toEqual([
     { href: "/admin", label: "Admin" },
     { href: "/admin/menu", label: "Menu" },
   ]);

@@ -1,5 +1,4 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import { expect, test } from "vitest";
 
 import type { Session } from "~/server/better-auth/config";
 
@@ -35,40 +34,37 @@ const createSession = (role?: Session["user"]["role"]): Session =>
     },
   }) as Session;
 
-void test("home redirects logged-out users to /login", () => {
-  assert.equal(getHomeRedirect(null), "/login");
+test("home redirects logged-out users to /login", () => {
+  expect(getHomeRedirect(null)).toBe("/login");
 });
 
-void test("home redirects logged-in users to /dashboard", () => {
-  assert.equal(getHomeRedirect(createSession()), "/dashboard");
+test("home redirects logged-in users to /dashboard", () => {
+  expect(getHomeRedirect(createSession())).toBe("/dashboard");
 });
 
-void test("auth pages redirect logged-in users to /dashboard", () => {
-  assert.equal(getAuthPageRedirect(createSession()), "/dashboard");
+test("auth pages redirect logged-in users to /dashboard", () => {
+  expect(getAuthPageRedirect(createSession())).toBe("/dashboard");
 });
 
-void test("auth pages preserve a safe next path for authenticated users", () => {
-  assert.equal(
-    getAuthPageRedirect(createSession(), "/admin/menu"),
-    "/admin/menu",
-  );
+test("auth pages preserve a safe next path for authenticated users", () => {
+  expect(getAuthPageRedirect(createSession(), "/admin/menu")).toBe("/admin/menu");
 });
 
-void test("auth pages allow logged-out users", () => {
-  assert.equal(getAuthPageRedirect(null), null);
+test("auth pages allow logged-out users", () => {
+  expect(getAuthPageRedirect(null)).toBeNull();
 });
 
-void test("after-auth redirect falls back to /dashboard for unsafe targets", () => {
-  assert.equal(getAfterAuthRedirect("//evil.com"), "/dashboard");
-  assert.equal(getAfterAuthRedirect("https://evil.com"), "/dashboard");
-  assert.equal(getAfterAuthRedirect("dashboard"), "/dashboard");
+test("after-auth redirect falls back to /dashboard for unsafe targets", () => {
+  expect(getAfterAuthRedirect("//evil.com")).toBe("/dashboard");
+  expect(getAfterAuthRedirect("https://evil.com")).toBe("/dashboard");
+  expect(getAfterAuthRedirect("dashboard")).toBe("/dashboard");
 });
 
-void test("admin redirect rejects non-admin roles", () => {
-  assert.equal(getAdminRedirect(createSession("user")), "/dashboard");
+test("admin redirect rejects non-admin roles", () => {
+  expect(getAdminRedirect(createSession("user"))).toBe("/dashboard");
 });
 
-void test("admin redirect sends missing-role users to /login", () => {
+test("admin redirect sends missing-role users to /login", () => {
   const baseSession = createSession();
   const sessionWithoutRole = {
     ...baseSession,
@@ -78,5 +74,5 @@ void test("admin redirect sends missing-role users to /login", () => {
     },
   } satisfies Exclude<RoutingSession, null>;
 
-  assert.equal(getAdminRedirect(sessionWithoutRole), "/login");
+  expect(getAdminRedirect(sessionWithoutRole)).toBe("/login");
 });
