@@ -1,12 +1,11 @@
-import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import test from "node:test";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { expect, test } from "vitest";
 
 import { getDirname } from "~/lib/esm-path";
 
-void test("database module can be imported from a Node CLI runtime", () => {
+test("database module can be imported from a Node CLI runtime", () => {
   const currentDir = getDirname(import.meta.url);
   const moduleUrl = pathToFileURL(resolve(currentDir, "db.ts")).href;
   const result = spawnSync(
@@ -29,9 +28,11 @@ void test("database module can be imported from a Node CLI runtime", () => {
     },
   );
 
-  assert.equal(
-    result.status,
-    0,
-    `Expected CLI import to succeed.\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
-  );
+  if (result.status !== 0) {
+    throw new Error(
+      `Expected CLI import to succeed.\nstdout:\n${result.stdout}\nstderr:\n${result.stderr}`,
+    );
+  }
+
+  expect(result.status).toBe(0);
 });

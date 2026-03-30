@@ -1,18 +1,17 @@
-import assert from "node:assert/strict";
-import test from "node:test";
+import { expect, test } from "vitest";
 
 import { hasRequiredRole, normalizeUserRole } from "./roles";
 
-void test("normalizeUserRole returns admin for the admin role", () => {
-  assert.equal(normalizeUserRole("admin"), "admin");
+test("normalizeUserRole returns admin for the admin role", () => {
+  expect(normalizeUserRole("admin")).toBe("admin");
 });
 
-void test("normalizeUserRole coerces unknown roles to user", () => {
-  assert.equal(normalizeUserRole("super-admin"), "user");
-  assert.equal(normalizeUserRole(undefined), "user");
+test("normalizeUserRole coerces unknown roles to user", () => {
+  expect(normalizeUserRole("super-admin")).toBe("user");
+  expect(normalizeUserRole(undefined)).toBe("user");
 });
 
-void test("hasRequiredRole only returns true for allowed roles", () => {
-  assert.equal(hasRequiredRole("admin", ["admin"]), true);
-  assert.equal(hasRequiredRole("user", ["admin"]), false);
+test("hasRequiredRole only returns true for allowed roles", () => {
+  expect(hasRequiredRole("admin", ["admin"])).toBe(true);
+  expect(hasRequiredRole("user", ["admin"])).toBe(false);
 });
