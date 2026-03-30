@@ -2,7 +2,9 @@ import { randomBytes } from "node:crypto";
 import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-const root = resolve(import.meta.dirname, "..");
+import { getDirname } from "../src/lib/esm-path";
+
+const root = resolve(getDirname(import.meta.url), "..");
 const envExamplePath = resolve(root, ".env.example");
 const envPath = resolve(root, ".env");
 

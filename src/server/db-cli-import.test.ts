@@ -4,8 +4,11 @@ import test from "node:test";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
+import { getDirname } from "~/lib/esm-path";
+
 void test("database module can be imported from a Node CLI runtime", () => {
-  const moduleUrl = pathToFileURL(resolve(import.meta.dirname, "db.ts")).href;
+  const currentDir = getDirname(import.meta.url);
+  const moduleUrl = pathToFileURL(resolve(currentDir, "db.ts")).href;
   const result = spawnSync(
     process.execPath,
     [
@@ -22,7 +25,7 @@ void test("database module can be imported from a Node CLI runtime", () => {
     ],
     {
       encoding: "utf8",
-      cwd: resolve(import.meta.dirname, "../.."),
+      cwd: resolve(currentDir, "../.."),
     },
   );
 

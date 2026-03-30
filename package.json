@@ -23,8 +23,8 @@
     "preview": "next build && next start",
     "setup:local": "node --import tsx ./scripts/setup-local.ts",
     "start": "next start",
-    "test": "tsx --test 'src/**/*.test.ts' 'src/**/*.test.tsx'",
-    "test:watch": "tsx --test --watch 'src/**/*.test.ts' 'src/**/*.test.tsx'",
+    "test": "tsx --test \"src/**/*.test.ts\" \"src/**/*.test.tsx\"",
+    "test:watch": "tsx --test --watch \"src/**/*.test.ts\" \"src/**/*.test.tsx\"",
     "typecheck": "tsc --noEmit",
     "verify": "pnpm check && pnpm test && pnpm build"
   },
