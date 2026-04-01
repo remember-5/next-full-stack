@@ -7,6 +7,7 @@
     "build": "next build",
     "check": "next lint && tsc --noEmit",
     "commit": "git-cz",
+    "commit:all": "git add -A && git-cz",
     "commitlint": "commitlint",
     "db:generate": "prisma migrate dev",
     "db:migrate": "prisma migrate deploy",
