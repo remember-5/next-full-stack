@@ -1,115 +1,29 @@
-# Next Full Stack Template
+# Create T3 App
 
-Opinionated Next.js 16 full stack starter for internal teams: Better Auth, Prisma, tRPC, shadcn sidebar shell, admin and user roles, and reusable local quality gates.
+This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
-## Prerequisites
+## What's next? How do I make an app with this?
 
-- Node.js 20.9.0 or newer
-- pnpm 10+
-- Docker
+We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
 
-## Quick Start
+If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
 
-Development startup is unchanged:
+- [Next.js](https://nextjs.org)
+- [NextAuth.js](https://next-auth.js.org)
+- [Prisma](https://prisma.io)
+- [Drizzle](https://orm.drizzle.team)
+- [Tailwind CSS](https://tailwindcss.com)
+- [tRPC](https://trpc.io)
 
-```bash
-pnpm install
-pnpm setup:local
-docker compose up -d db
-pnpm db:push
-pnpm auth:init-admin
-pnpm dev
-```
+## Learn More
 
-`pnpm setup:local` creates `.env` from `.env.example` when needed and fills `BETTER_AUTH_SECRET` for local development.
+To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
 
-## Git Hooks
+- [Documentation](https://create.t3.gg/)
+- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
 
-After `pnpm install`, Husky installs local git hooks automatically through the `prepare` script.
+You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
 
-- `pre-commit` runs `pnpm lint-staged` for staged `js/jsx/ts/tsx/mdx` files
-- `commit-msg` runs `pnpm exec commitlint --edit "$1"` and enforces Conventional Commits like `feat: add auth callback`
-- `pre-push` runs `pnpm check`
-- use `git commit --no-verify` only for exceptional local bypass cases
+## How do I deploy this?
 
-## Default Accounts
-
-- Admin email comes from `ADMIN_EMAIL`
-- Admin password comes from `ADMIN_PASSWORD`
-
-## Testing
-
-### Test Stack
-
-- `Vitest` for unit and non-browser integration tests
-- `React Testing Library` for client component tests
-- `Playwright` for end-to-end browser flows
-
-### Test Commands
-
-```bash
-pnpm test
-pnpm test:unit
-pnpm test:unit:watch
-pnpm test:e2e
-pnpm test:e2e:ui
-pnpm verify
-```
-
-### Playwright Setup
-
-First-time local E2E setup:
-
-```bash
-cp .env.test.example .env.test
-pnpm test:e2e:install
-docker compose up -d db
-```
-
-Then run:
-
-```bash
-pnpm test:e2e
-```
-
-Playwright automatically:
-
-- starts a test Next.js server on port `3001`
-- runs `pnpm db:push:test`
-- runs `pnpm auth:init-admin:test`
-- executes the browser tests
-
-Playwright does not automatically:
-
-- create `.env.test`
-- start Docker for PostgreSQL
-
-### `.env` vs `.env.test`
-
-- `.env` is for normal development on `http://localhost:3000`
-- `.env.test` is for Playwright on `http://localhost:3001`
-- both can use the same PostgreSQL container
-- `.env.test` uses the `e2e` schema so browser tests do not pollute development data
-- `BETTER_AUTH_SECRET` in `.env.test` can be left blank for local non-production testing
-
-If `.env.test` already exists, you usually only need to keep Docker running and execute `pnpm test:e2e`.
-
-## Quality Gates
-
-```bash
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm check
-pnpm verify
-pnpm build
-```
-
-## Template Scope
-
-- Next.js 16 App Router
-- Better Auth email/password auth
-- Admin and user route separation
-- Prisma + PostgreSQL
-- tRPC server/client wiring
-- shadcn sidebar + breadcrumb shell
+Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.

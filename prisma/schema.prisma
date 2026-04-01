@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 // NOTE: When using mysql or sqlserver, uncomment the //@db.Text annotations in model Account below
@@ -32,10 +33,6 @@ model User {
   email         String
   emailVerified Boolean   @default(false)
   image         String? //@db.Text
-  role          String   @default("user") //@db.Text
-  banned        Boolean? @default(false)
-  banReason     String? //@db.Text
-  banExpires    DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
@@ -52,11 +49,10 @@ model Session {
   token     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  ipAddress      String? //@db.Text
-  impersonatedBy String? //@db.Text
-  userAgent      String? //@db.Text
-  userId         String
-  user           User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress String? //@db.Text
+  userAgent String? //@db.Text
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
   @@map("session")

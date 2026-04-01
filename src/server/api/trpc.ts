@@ -11,12 +11,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import {
-  hasRequiredRole,
-  normalizeUserRole,
-} from "~/lib/auth/roles";
 import { auth } from "~/server/better-auth";
-import type { UserRole } from "~/server/better-auth/config";
 import { db } from "~/server/db";
 
 /**
@@ -133,35 +128,7 @@ export const protectedProcedure = t.procedure
     return next({
       ctx: {
         // infers the `session` as non-nullable
-        session: {
-          ...ctx.session,
-          user: {
-            ...ctx.session.user,
-            role: normalizeUserRole(ctx.session.user.role),
-          },
-        },
+        session: { ...ctx.session, user: ctx.session.user },
       },
     });
   });
-
-function createRoleProcedure(allowedRoles: readonly UserRole[]) {
-  return protectedProcedure.use(({ ctx, next }) => {
-    if (!hasRequiredRole(ctx.session.user.role, allowedRoles)) {
-      throw new TRPCError({ code: "FORBIDDEN" });
-    }
-
-    return next({
-      ctx: {
-        session: {
-          ...ctx.session,
-          user: {
-            ...ctx.session.user,
-            role: normalizeUserRole(ctx.session.user.role),
-          },
-        },
-      },
-    });
-  });
-}
-
-export const adminProcedure = createRoleProcedure(["admin"] as const);
