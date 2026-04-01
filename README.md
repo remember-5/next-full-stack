@@ -10,6 +10,7 @@ It comes with routing, authentication, database access, API plumbing, UI primiti
 - Better Auth for authentication
 - Prisma for database access and schema management
 - tRPC for typed server-to-client APIs
+- Pino for structured server-side logging
 - Tailwind CSS and shadcn-style UI primitives
 - TanStack Query and TanStack Form for client state and forms
 - ESLint, Prettier, Husky, lint-staged, commitlint, and cz-git for code quality and commit workflow
@@ -54,6 +55,7 @@ Current variables:
 - `BETTER_AUTH_SECRET`: signing secret used by Better Auth
 - `BETTER_AUTH_GITHUB_CLIENT_ID`: GitHub OAuth client id for Better Auth
 - `BETTER_AUTH_GITHUB_CLIENT_SECRET`: GitHub OAuth client secret for Better Auth
+- `LOG_LEVEL`: server log verbosity for the shared Pino logger, for example `info` or `debug`
 
 If you add a new environment variable, update `.env.example` at the same time.
 
@@ -157,9 +159,12 @@ Commit message guidance:
 
 Choose a deployment target based on the application requirements. For most internal apps, a standard Next.js deployment flow on Vercel or Docker-based infrastructure is a reasonable default.
 
+Server logs are emitted through Pino. In development they are pretty-printed for readability, and in production they are written as structured JSON to standard output so Docker can collect them directly.
+
 Before release, verify that:
 
 - production environment variables are configured
+- `LOG_LEVEL` is set appropriately for the target environment, usually `info` in production
 - database connectivity is available from the target runtime
 - Better Auth callback and base URL settings match the deployed domain
 - Prisma migrations or schema sync strategy are aligned with the environment

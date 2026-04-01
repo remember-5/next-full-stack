@@ -15,6 +15,7 @@ This file is for coding agents working in `/Users/wangjiahao/Github/remember5/ne
 - Language: TypeScript with `strict: true`, `noUncheckedIndexedAccess: true`, and `verbatimModuleSyntax: true`.
 - Styling: Tailwind CSS v4, `tw-animate-css`, and `prettier-plugin-tailwindcss`.
 - Data/auth: Prisma, PostgreSQL, Better Auth, tRPC.
+- Logging: Pino with pretty output in development and structured JSON in production.
 - Client state/forms: TanStack Query and TanStack Form.
 - Quality gates: ESLint flat config, Prettier, Husky, lint-staged, commitlint, cz-git.
 
@@ -35,7 +36,7 @@ This file is for coding agents working in `/Users/wangjiahao/Github/remember5/ne
 - Install dependencies with `bun install`.
 - Copy envs with `cp .env.example .env`.
 - Required envs are defined in `src/env.js` and documented in `.env.example`.
-- Main required variables: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_GITHUB_CLIENT_ID`, `BETTER_AUTH_GITHUB_CLIENT_SECRET`.
+- Main required variables: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_GITHUB_CLIENT_ID`, `BETTER_AUTH_GITHUB_CLIENT_SECRET`, `LOG_LEVEL`.
 - Regenerate/push Prisma schema during local setup with `bun run db:push`.
 
 ## Primary Commands
@@ -155,6 +156,7 @@ This file is for coding agents working in `/Users/wangjiahao/Github/remember5/ne
 - `service.ts` is the data-access seam; the products/users examples explicitly document this pattern.
 - TanStack Query options are wrapped in helper factories like `productsQueryOptions`.
 - Keep tRPC router changes wired through `src/server/api/root.ts`.
+- Server-side structured logging is centralized in `src/lib/logger.ts`; prefer it over ad-hoc `console.*` calls in server code.
 - Do not hand-edit generated Prisma client files.
 
 ## Error Handling Conventions
