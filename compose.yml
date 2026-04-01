@@ -1,0 +1,61 @@
+x-app-build: &app-build
+  context: .
+  dockerfile: Dockerfile
+
+x-db-url: &db-url postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-next-full-stack}
+x-log-level: &log-level ${LOG_LEVEL:-info}
+x-better-auth-secret: &better-auth-secret ${BETTER_AUTH_SECRET:-}
+x-better-auth-url: &better-auth-url ${BETTER_AUTH_URL:-}
+
+services:
+  db:
+    image: postgres:18
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-next-full-stack}
+    volumes:
+      - app-db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  migrate:
+    build:
+      <<: *app-build
+      target: migrator
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: *db-url
+      LOG_LEVEL: *log-level
+      NODE_ENV: production
+
+  app:
+    build:
+      <<: *app-build
+      target: runner
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: *db-url
+      LOG_LEVEL: *log-level
+      BETTER_AUTH_SECRET: *better-auth-secret
+      BETTER_AUTH_URL: *better-auth-url
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  app-db-data:

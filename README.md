@@ -31,10 +31,10 @@ It comes with routing, authentication, database access, API plumbing, UI primiti
 
 3. Fill in the required environment variables in `.env`.
 
-4. Push the Prisma schema to your local database and generate the Prisma client:
+4. Create and apply the current Prisma migration set to your local database:
 
    ```bash
-   bun run db:push
+   bun run db:migrate:dev
    ```
 
 5. Start the development server:
@@ -53,8 +53,7 @@ Current variables:
 
 - `DATABASE_URL`: PostgreSQL connection string used by Prisma
 - `BETTER_AUTH_SECRET`: signing secret used by Better Auth
-- `BETTER_AUTH_GITHUB_CLIENT_ID`: GitHub OAuth client id for Better Auth
-- `BETTER_AUTH_GITHUB_CLIENT_SECRET`: GitHub OAuth client secret for Better Auth
+- `BETTER_AUTH_URL`: Better Auth base URL used for auth routes and callbacks
 - `LOG_LEVEL`: server log verbosity for the shared Pino logger, for example `info` or `debug`
 
 If you add a new environment variable, update `.env.example` at the same time.
@@ -79,9 +78,10 @@ If you add a new environment variable, update `.env.example` at the same time.
 
 ### Database
 
-- `bun run db:push` - push the current Prisma schema to the database and regenerate the client
+- `bun run db:migrate:dev` - create and apply a development migration, then regenerate the Prisma client
 - `bun run db:generate` - regenerate the Prisma client from the current schema
 - `bun run db:migrate` - apply deploy-time Prisma migrations
+- `bun run db:push` - directly sync the schema to a database for temporary or throwaway environments
 - `bun run db:studio` - open Prisma Studio
 
 ### Git Helpers
@@ -107,19 +107,60 @@ The project follows a feature-oriented structure on top of the Next.js App Route
 
 This template uses Prisma with PostgreSQL by default.
 
-Recommended local workflow:
+Recommended team workflow:
 
 1. Make sure `DATABASE_URL` points to a reachable local or remote PostgreSQL instance.
-2. Use `bun run db:push` while iterating quickly on schema changes in local development.
-3. Use `bun run db:generate` if you only need to refresh the generated Prisma client.
-4. Use `bun run db:migrate` in deployment environments that apply managed migration history.
-5. Use `bun run db:studio` to inspect records during development.
+2. This repository now tracks a baseline migration at `prisma/migrations/20260401000000_init`.
+3. If your database is empty, run `bun run db:migrate` once to apply that baseline.
+4. If your database already contains the current tables, mark the baseline as already applied with `bunx prisma migrate resolve --applied 20260401000000_init`.
+5. When you change `prisma/schema.prisma`, run `bun run db:migrate:dev` and commit the generated migration files.
+6. When you pull schema changes from teammates, apply the committed migrations before starting the app.
+7. Use `bun run db:migrate` in deployment environments to apply the committed migration history.
+8. Use `bun run db:generate` if you only need to refresh the generated Prisma client.
+9. Reserve `bun run db:push` for temporary or disposable databases where you do not need migration history.
+10. Use `bun run db:studio` to inspect records during development.
 
 If you need a temporary database for short-lived local testing, this repository has also been used with:
 
 ```bash
 bunx --bun create-db --ttl 24h --env .env
 ```
+
+With Docker Compose, the one-shot `migrate` service waits for PostgreSQL to become healthy and runs `prisma migrate deploy` before the `app` service starts. That keeps first deploys and repeated updates idempotent while still letting local development start only PostgreSQL when needed.
+
+- Start only the local PostgreSQL service: `docker compose up -d db`
+- Local development schema changes: `bun run db:migrate:dev`
+- Create `.env` from `.env.example` before running the Compose stack; Compose reads the root `.env` file automatically for variable substitution
+- Build and deploy the production stack: `docker compose up -d --build`
+- Re-run only the migration job: `docker compose up --build migrate`
+- App-only restart: `docker compose up -d app`
+- Stop the local PostgreSQL service: `docker compose stop db`
+- Remove the local PostgreSQL container: `docker compose rm -sf db`
+- Remove the local PostgreSQL data volume as well: `docker compose down -v`
+
+The Compose-managed `app` container refuses to start unless both `BETTER_AUTH_URL` and `BETTER_AUTH_SECRET` are present. Keeping them in the project-root `.env` file is the simplest local setup.
+
+Recommended deployment order:
+
+1. First production deploy with an empty database:
+   ```bash
+   docker compose up -d --build
+   ```
+2. First production deploy with an existing database that already matches the current schema:
+   ```bash
+   bunx prisma migrate resolve --applied 20260401000000_init
+   docker compose up -d --build
+   ```
+3. Production update with schema changes:
+   ```bash
+   docker compose up -d --build
+   ```
+4. Production update without schema changes:
+   ```bash
+   docker compose up -d --build
+   ```
+
+Compose uses the official `postgres:18` image. The database volume is mounted at `/var/lib/postgresql`, which matches the PostgreSQL 18 image layout and avoids startup failures caused by mounting directly at `/var/lib/postgresql/data`.
 
 ## Authentication Notes
 

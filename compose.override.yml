@@ -1,0 +1,6 @@
+services:
+  db:
+    # Local development can use `docker compose up -d db` to boot only Postgres.
+    restart: "no"
+    ports:
+      - "5432:5432"

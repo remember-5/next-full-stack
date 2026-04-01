@@ -36,7 +36,9 @@ This file is for coding agents working in `/Users/wangjiahao/Github/remember5/ne
 - Install dependencies with `bun install`.
 - Copy envs with `cp .env.example .env`.
 - Required envs are defined in `src/env.js` and documented in `.env.example`.
-- Main required variables: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_GITHUB_CLIENT_ID`, `BETTER_AUTH_GITHUB_CLIENT_SECRET`, `LOG_LEVEL`.
+- Main required variables: `DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `LOG_LEVEL`.
+- Docker Compose reads the project-root `.env` file for variable substitution; the Compose-managed `app` container exits early when `BETTER_AUTH_SECRET` or `BETTER_AUTH_URL` is missing.
+- Docker Compose uses a dedicated `migrate` service for deploy-time Prisma migrations; `app` depends on `migrate` completing successfully.
 - Regenerate/push Prisma schema during local setup with `bun run db:push`.
 
 ## Primary Commands
@@ -45,6 +47,9 @@ This file is for coding agents working in `/Users/wangjiahao/Github/remember5/ne
 - `bun run build`: create a production build.
 - `bun run start`: run the production server.
 - `bun run preview`: build and immediately start.
+- `docker compose up -d db`: start only the local PostgreSQL service for development.
+- `docker compose up -d --build`: build and start the Compose deployment stack.
+- `docker compose down -v`: stop the Compose stack and remove the local PostgreSQL volume.
 - `bun run check`: run ESLint and TypeScript (`eslint . && tsc --noEmit`).
 - `bun run lint`: run ESLint.
 - `bun run lint:fix`: run ESLint with autofix.
@@ -77,7 +82,7 @@ This file is for coding agents working in `/Users/wangjiahao/Github/remember5/ne
 
 - For small UI or logic edits: run `bun run check`.
 - For formatting-sensitive edits: run `bun run format:check` or `bun run format:write`.
-- For Prisma/schema changes: run `bun run db:generate` or `bun run db:push` as needed.
+- For Prisma/schema changes: run `bun run db:migrate:dev` or `bun run db:generate` as needed.
 - For build-risky changes: run `bun run build`.
 
 ## Git Hooks And Commit Workflow
