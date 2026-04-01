@@ -50,8 +50,8 @@ This template uses `husky`, `commitlint`, `cz-git`, and `lint-staged` to keep co
 
 ### Daily Usage
 
-1. Stage your changes with `git add`.
-2. Run `bun run commit` to open the interactive `cz-git` prompt.
+1. Stage selected changes with `git add`, or run `bun run commit:all` to stage all changes automatically.
+2. Run `bun run commit` to open the interactive `cz-git` prompt for the changes already staged.
 3. Confirm the generated commit message and let the hooks run automatically.
 
 ### What Runs Automatically
@@ -68,6 +68,7 @@ This template uses `husky`, `commitlint`, `cz-git`, and `lint-staged` to keep co
 ### Manual Commands
 
 - Run the interactive commit helper: `bun run commit`
+- Stage all changes and run the interactive commit helper: `bun run commit:all`
 - Check a commit message manually: `bun run commitlint`
 - Reinstall hooks after dependency install if needed: `bun run prepare`
 
