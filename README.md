@@ -209,3 +209,8 @@ Before release, verify that:
 - database connectivity is available from the target runtime
 - Better Auth callback and base URL settings match the deployed domain
 - Prisma migrations or schema sync strategy are aligned with the environment
+
+## Acknowledgements
+
+- Inspired in part by [`Kiranism/next-shadcn-dashboard-starter`](https://github.com/Kiranism/next-shadcn-dashboard-starter)
+- Inspired in part by [`t3-oss/create-t3-app`](https://github.com/t3-oss/create-t3-app/)
