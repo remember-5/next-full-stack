@@ -3,7 +3,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: [".next", "generated", "**/*.d.ts"],
+    ignores: [".next", "coverage", "generated", "**/*.d.ts"],
   },
   nextPlugin.configs["core-web-vitals"],
   {

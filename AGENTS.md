@@ -57,18 +57,20 @@ This file is for coding agents working in `/Users/wangjiahao/Github/remember5/ne
 
 ## Test Status
 
-- There is currently no dedicated test runner configured in `package.json`.
-- No Vitest, Jest, Playwright, or Cypress config files are present.
-- No `*.test.*` or `*.spec.*` files were found in the repository.
-- Do not invent `bun run test` commands in automation unless you also add the test setup.
+- Vitest is configured for unit and component tests.
+- Shared test setup lives in `src/test/setup.ts`.
+- Example tests live beside source files, for example `src/lib/format.test.ts` and `src/components/ui/button.test.tsx`.
+- There is still no E2E runner configured; do not assume Playwright or Cypress is available.
 
 ## Single-Test Guidance
 
-- There is no current single-test command because no test framework is installed.
-- For targeted verification today, use the smallest relevant command instead:
+- Run all tests with `bun run test`.
+- Run tests in watch mode with `bun run test:watch`.
+- Run coverage with `bun run test:coverage`.
+- Run one file with `bunx vitest run src/lib/format.test.ts`.
+- Run one test case with `bunx vitest run src/lib/format.test.ts -t "returns an empty string for missing input"`.
 - `bun run lint path/to/file.tsx` is not configured; ESLint runs on `.` only, so use `bunx eslint path/to/file.tsx` if you need a single-file lint check.
 - `bunx tsc --noEmit` is repo-wide only; there is no single-file typecheck workflow configured.
-- If you add a test runner, update this file with exact commands for running one file and one test case.
 
 ## Recommended Verification Order
 
