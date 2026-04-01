@@ -1,29 +1,76 @@
-# Create T3 App
+# Next Full Stack Template
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This repository is an internal full-stack template built on top of Next.js. It is intended to provide a practical starting point for new projects with a consistent engineering baseline, including TypeScript, linting, formatting, database tooling, and commit workflow automation.
 
-## What's next? How do I make an app with this?
-
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Included Stack
 
 - [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
+- [React](https://react.dev)
+- [TypeScript](https://www.typescriptlang.org)
+- [Prisma](https://www.prisma.io)
 - [Tailwind CSS](https://tailwindcss.com)
 - [tRPC](https://trpc.io)
+- [Better Auth](https://www.better-auth.com)
 
-## Learn More
+## Getting Started
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+1. Install dependencies with `bun install`.
+2. Copy environment variables from `.env.example` if needed.
+3. Start the development server with `bun run dev`.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Common Commands
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+- Start development: `bun run dev`
+- Build for production: `bun run build`
+- Start the production server: `bun run start`
+- Run lint and type checks: `bun run check`
+- Run lint only: `bun run lint`
+- Run type check only: `bun run typecheck`
+- Format files: `bun run format:write`
 
-## How do I deploy this?
+## Database Setup
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+This template uses Prisma for database access and schema management.
+
+1. Make sure your database connection is configured in `.env`.
+2. Generate or sync the schema with `bun run db:push` during early local development.
+3. Open Prisma Studio with `bun run db:studio` to inspect local data.
+4. Use `bun run db:migrate` for deploy-time migrations when your project starts using managed migration history.
+
+### Database Commands
+
+- Push the current schema to the database: `bun run db:push`
+- Create a development migration: `bun run db:generate`
+- Apply deploy migrations: `bun run db:migrate`
+- Open Prisma Studio: `bun run db:studio`
+
+## Commit Workflow
+
+This template uses `husky`, `commitlint`, `cz-git`, and `lint-staged` to keep commits consistent and catch issues before they are recorded.
+
+### Daily Usage
+
+1. Stage your changes with `git add`.
+2. Run `bun run commit` to open the interactive `cz-git` prompt.
+3. Confirm the generated commit message and let the hooks run automatically.
+
+### What Runs Automatically
+
+- `pre-commit`: runs `lint-staged` on staged files only
+- `commit-msg`: runs `commitlint` to validate the final commit message
+
+### Commit Message Rules
+
+- Use Conventional Commits such as `feat`, `fix`, `docs`, `refactor`, and `chore`
+- Scope is optional, but recommended for template modules such as `app`, `auth`, `api`, `db`, `ui`, `config`, `deps`, and `ci`
+- Keep the subject short, imperative, and without a trailing period
+
+### Manual Commands
+
+- Run the interactive commit helper: `bun run commit`
+- Check a commit message manually: `bun run commitlint`
+- Reinstall hooks after dependency install if needed: `bun run prepare`
+
+## Deployment
+
+Choose a deployment target based on your project requirements. For most internal web applications, a standard Next.js deployment flow on platforms such as Vercel or Docker-based infrastructure is a good default. Make sure environment variables, database access, and authentication callbacks are configured for the target environment before release.
