@@ -1,23 +1,17 @@
-import { globalIgnores } from "eslint/config";
-import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
-import nextTypeScript from "eslint-config-next/typescript";
+import nextPlugin from "@next/eslint-plugin-next";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
-  globalIgnores([
-    ".next/**",
-    ".worktrees/**",
-    "generated/**",
-    ".agents/**",
-    ".claude/**",
-  ]),
-  ...nextCoreWebVitals,
-  ...nextTypeScript,
-  ...tseslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  ...tseslint.configs.stylisticTypeChecked,
+  {
+    ignores: [".next", "generated", "**/*.d.ts"],
+  },
+  nextPlugin.configs["core-web-vitals"],
   {
     files: ["**/*.ts", "**/*.tsx"],
+    extends: [
+      ...tseslint.configs.recommendedTypeChecked,
+      ...tseslint.configs.stylisticTypeChecked,
+    ],
     rules: {
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/consistent-type-definitions": "off",
@@ -25,15 +19,15 @@ export default tseslint.config(
         "warn",
         { prefer: "type-imports", fixStyle: "inline-type-imports" },
       ],
-      "@typescript-eslint/no-misused-promises": [
-        "error",
-        { checksVoidReturn: { attributes: false } },
-      ],
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/no-misused-promises": [
+        "error",
+        { checksVoidReturn: { attributes: false } },
+      ],
     },
   },
   {

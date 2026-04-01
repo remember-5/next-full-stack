@@ -1,37 +1,42 @@
-import { GalleryVerticalEndIcon } from "lucide-react";
+import { AuthShell } from "@/features/auth/components/auth-shell";
+import { LoginForm } from "@/features/auth/components/login-form";
+import { redirect } from "next/navigation";
+import { getSession } from "~/server/better-auth/server";
 
-import { LoginForm } from "~/components/login-form";
-import { siteConfig } from "~/config/site";
-import { getSafeRedirectTarget } from "~/lib/auth/routing";
-import { redirectAuthenticatedUser } from "~/server/better-auth/guards";
+export const metadata = {
+  title: "Login",
+};
 
 type LoginPageProps = {
-  searchParams?: Promise<{
+  searchParams: Promise<{
     next?: string | string[];
   }>;
 };
 
-export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const resolvedSearchParams = searchParams ? await searchParams : undefined;
-  const nextPath = getSafeRedirectTarget(
-    Array.isArray(resolvedSearchParams?.next)
-      ? resolvedSearchParams.next[0]
-      : resolvedSearchParams?.next,
-  );
+function getRedirectTarget(nextParam?: string | string[]) {
+  const value = Array.isArray(nextParam) ? nextParam[0] : nextParam;
 
-  await redirectAuthenticatedUser(nextPath);
+  if (value?.startsWith("/") && !value.startsWith("//")) {
+    return value;
+  }
+
+  return "/dashboard/overview";
+}
+
+export default async function LoginPage(props: LoginPageProps) {
+  const [{ next }, session] = await Promise.all([
+    props.searchParams,
+    getSession(),
+  ]);
+  const redirectTo = getRedirectTarget(next);
+
+  if (session?.user) {
+    redirect(redirectTo);
+  }
 
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <div className="flex items-center gap-2 self-center font-medium">
-          <div className="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <GalleryVerticalEndIcon className="size-4" />
-          </div>
-          {siteConfig.companyName}
-        </div>
-        <LoginForm nextPath={nextPath} />
-      </div>
-    </div>
+    <AuthShell>
+      <LoginForm redirectTo={redirectTo} />
+    </AuthShell>
   );
 }
