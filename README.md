@@ -17,19 +17,31 @@ It comes with routing, authentication, database access, API plumbing, UI primiti
 
 ## Quick Start
 
-1. Install dependencies:
-
-   ```bash
-   bun install
-   ```
-
-2. Create your local environment file:
+1. Create your local environment file:
 
    ```bash
    cp .env.example .env
    ```
 
-3. Fill in the required environment variables in `.env`.
+   `bun install` runs a Prisma postinstall step, so creating `.env` first avoids
+   first-run setup errors.
+
+2. Fill in the required environment variables in `.env`.
+
+   Generate `BETTER_AUTH_SECRET` locally with:
+
+   ```bash
+   openssl rand -base64 32
+   ```
+
+   Then set `DATABASE_URL`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, and
+   `LOG_LEVEL` in `.env`.
+
+3. Install dependencies:
+
+   ```bash
+   bun install
+   ```
 
 4. Create and apply the current Prisma migration set to your local database:
 
@@ -52,7 +64,7 @@ The repository includes `.env.example` as the source of truth for required local
 Current variables:
 
 - `DATABASE_URL`: PostgreSQL connection string used by Prisma
-- `BETTER_AUTH_SECRET`: signing secret used by Better Auth
+- `BETTER_AUTH_SECRET`: signing secret used by Better Auth, for example `openssl rand -base64 32`
 - `BETTER_AUTH_URL`: Better Auth base URL used for auth routes and callbacks
 - `LOG_LEVEL`: server log verbosity for the shared Pino logger, for example `info` or `debug`
 
