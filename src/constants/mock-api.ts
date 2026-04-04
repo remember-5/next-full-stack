@@ -5,6 +5,8 @@
 import { faker } from "@faker-js/faker";
 import { matchSorter } from "match-sorter"; // For filtering
 
+faker.seed(42);
+
 export const delay = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
